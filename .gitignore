@@ -78,3 +78,7 @@ target/
 # FRONTEND
 ######
 
+# Ignorerer selvgenerte filer
+/bysykkel-vue-fullstack-frontend/src/main/resources/public/
+/bysykkel-vue-fullstack-frontend/src/main/resources/public
+

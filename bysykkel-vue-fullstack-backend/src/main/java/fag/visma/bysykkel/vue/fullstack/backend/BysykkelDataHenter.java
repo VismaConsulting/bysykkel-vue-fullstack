@@ -1,7 +1,6 @@
-package fag.visma.fullstack.skeleton.backend.bysykkel;
+package fag.visma.bysykkel.vue.fullstack.backend;
 
-import fag.visma.fullstack.skeleton.backend.bysykkel.domene.BysykkelResponse;
-import fag.visma.fullstack.skeleton.backend.bysykkel.domene.Station;
+import fag.visma.bysykkel.vue.fullstack.backend.domene.Station;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

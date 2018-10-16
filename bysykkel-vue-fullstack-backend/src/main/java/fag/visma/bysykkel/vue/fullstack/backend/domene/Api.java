@@ -1,10 +1,11 @@
-package fag.visma.fullstack.skeleton.backend.bysykkel;
+package fag.visma.bysykkel.vue.fullstack.backend.domene;
 
-import fag.visma.fullstack.skeleton.backend.bysykkel.domene.Station;
+import fag.visma.bysykkel.vue.fullstack.backend.BysykkelTjenester;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import fag.visma.bysykkel.vue.fullstack.backend.domene.Station;
 
 import javax.websocket.server.PathParam;
 import java.util.List;

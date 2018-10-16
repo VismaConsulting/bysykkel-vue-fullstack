@@ -1,4 +1,4 @@
-package fag.visma.fullstack.skeleton.backend.bysykkel.domene;
+package fag.visma.bysykkel.vue.fullstack.backend.domene;
 
 import java.util.List;
 

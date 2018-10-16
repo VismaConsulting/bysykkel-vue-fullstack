@@ -1,6 +1,6 @@
-package fag.visma.fullstack.skeleton.backend.bysykkel;
+package fag.visma.bysykkel.vue.fullstack.backend;
 
-import fag.visma.fullstack.skeleton.backend.bysykkel.domene.Station;
+import fag.visma.bysykkel.vue.fullstack.backend.domene.Station;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

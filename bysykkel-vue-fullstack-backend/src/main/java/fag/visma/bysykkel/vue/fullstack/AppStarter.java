@@ -1,4 +1,4 @@
-package fag.visma.fullstack.skeleton.backend;
+package fag.visma.bysykkel.vue.fullstack;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -16,16 +16,19 @@ public class BysykkelTjenester {
         return bysykkelDataHenter.hentAlleStasjoner();
     }
 
-    public List<Station> hentAlleStasjonerAvailability(){
+    public List<Station> hentAlleStasjonerTilgjengelighet(){
         return bysykkelDataHenter.hentAlleStasjonerMedAvailability();
     }
 
     public Station hentStasjonForId(long id){
-        return hentAlleStasjonerAvailability().stream().findFirst().orElseThrow(() -> new RuntimeException("Id ikke funnet: " + id));
+        return hentAlleStasjonerTilgjengelighet().stream()
+                .filter(stasjon -> stasjon.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Id ikke funnet: " + id));
     }
 
     public Station hentStasjonForNavn(String navn){
-        return hentAlleStasjonerAvailability().stream()
+        return hentAlleStasjonerTilgjengelighet().stream()
                 .filter(stasjon -> stasjon.getTitle().equals(navn))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Stasjon ved navn ikke funnet: " + navn));

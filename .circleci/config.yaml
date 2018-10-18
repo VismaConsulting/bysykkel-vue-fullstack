@@ -1,0 +1,69 @@
+version: 2 # use CircleCI 2.0
+jobs: # a collection of steps
+  build: # runs not using Workflows must have a `build` job as entry point
+
+    working_directory: ~/repo/bysykkel # directory where steps will run
+
+    docker: # run the steps with Docker
+      - image: lg87/java-aws-eks:latest
+
+    steps: # a collection of executable commands
+
+      - checkout: # check out source code to working directory
+          path: ~/repo
+
+      - run:
+          name: install aws + kubectl
+          command: |
+            aws eks update-kubeconfig --name visma-consulting-eks --region eu-west-1
+
+
+      - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
+          key: bysykkel-{{ checksum "pom.xml" }}
+
+      - run: mvn dependency:go-offline # gets the project dependencies
+
+      - save_cache: # saves the project dependencies
+          paths:
+            - ~/.m2
+          key: bysykkel-{{ checksum "pom.xml" }}
+
+      - run: mvn package # run the actual tests
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      - run:
+          name: Docker vars
+          command: |
+            echo 'export ECR_REPOSITORY_NAME="fagsamling2018"' >> $BASH_ENV
+            echo 'export APP_NAME="bysykkel-${CIRCLE_BRANCH}"' >> $BASH_ENV
+            echo 'export TAG_NAME="${APP_NAME}.${CIRCLE_BUILD_NUM}"' >> $BASH_ENV
+            echo 'export FULL_IMAGE_NAME="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY_NAME}:${TAG_NAME}"' >> $BASH_ENV
+
+      - run:
+          name: Docker build
+          command: docker build -t $FULL_IMAGE_NAME .
+
+      - run:
+          name: Docker push
+          command: |
+            eval $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+            docker push $FULL_IMAGE_NAME
+
+      - run:
+          name: EKS Deploy
+          command: |
+            export PATH=$HOME/.bin:$PATH
+            aws eks update-kubeconfig --name visma-consulting-eks --region eu-west-1
+            sudo apt-get install gettext
+            cd ..
+            envsubst < deployment.yaml > output.yaml
+            kubectl apply -f output.yaml
+
+      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
+          path: target/surefire-reports
+
+      - store_artifacts: # store the uberjar as an artifact
+          path: target/app.jar
+      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples

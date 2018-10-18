@@ -34,7 +34,7 @@
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <finalName>bysykkel-fullstack-vue</finalName>
+                            <finalName>app</finalName>
                         </configuration>
                     </execution>
                 </executions>

@@ -61,9 +61,9 @@ jobs: # a collection of steps
             envsubst < deployment.yaml > output.yaml
             kubectl apply -f output.yaml
 
-      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
-          path: target/surefire-reports
+     # - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
+      #    path: target/surefire-reports
 
       - store_artifacts: # store the uberjar as an artifact
-          path: bysykkel-vue-fullstack-backend/target/app.jar
+          path: target/app.jar
       # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples

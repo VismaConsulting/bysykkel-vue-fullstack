@@ -2,7 +2,7 @@ version: 2 # use CircleCI 2.0
 jobs: # a collection of steps
   build: # runs not using Workflows must have a `build` job as entry point
 
-    working_directory: ~/repo/bysykkel # directory where steps will run
+    working_directory: ~/repo/bysykkel-vue-fullstack # directory where steps will run
 
     docker: # run the steps with Docker
       - image: lg87/java-aws-eks:latest
@@ -20,14 +20,14 @@ jobs: # a collection of steps
 
 
       - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
-          key: bysykkel-{{ checksum "pom.xml" }}
+          key: bysykkel-vue-fullstack-{{ checksum "pom.xml" }}
 
       - run: mvn dependency:go-offline # gets the project dependencies
 
       - save_cache: # saves the project dependencies
           paths:
             - ~/.m2
-          key: bysykkel-{{ checksum "pom.xml" }}
+          key: bysykkel-vue-fullstack-{{ checksum "pom.xml" }}
 
       - run: mvn package # run the actual tests
 
@@ -38,7 +38,7 @@ jobs: # a collection of steps
           name: Docker vars
           command: |
             echo 'export ECR_REPOSITORY_NAME="fagsamling2018"' >> $BASH_ENV
-            echo 'export APP_NAME="bysykkel-${CIRCLE_BRANCH}"' >> $BASH_ENV
+            echo 'export APP_NAME="bysykkel-vue-fullstack-${CIRCLE_BRANCH}"' >> $BASH_ENV
             echo 'export TAG_NAME="${APP_NAME}.${CIRCLE_BUILD_NUM}"' >> $BASH_ENV
             echo 'export FULL_IMAGE_NAME="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY_NAME}:${TAG_NAME}"' >> $BASH_ENV
 
@@ -52,11 +52,10 @@ jobs: # a collection of steps
             eval $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
             docker push $FULL_IMAGE_NAME
 
-      - run:
+      - run:  #aws eks update-kubeconfig --name visma-consulting-eks --region eu-west-1
           name: EKS Deploy
           command: |
             export PATH=$HOME/.bin:$PATH
-            aws eks update-kubeconfig --name visma-consulting-eks --region eu-west-1
             sudo apt-get install gettext
             cd ..
             envsubst < deployment.yaml > output.yaml
@@ -66,5 +65,5 @@ jobs: # a collection of steps
           path: target/surefire-reports
 
       - store_artifacts: # store the uberjar as an artifact
-          path: target/app.jar
+          path: bysykkel-vue-fullstack-backend/target/app.jar
       # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples

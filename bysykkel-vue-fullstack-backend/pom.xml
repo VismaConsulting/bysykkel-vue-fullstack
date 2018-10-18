@@ -19,7 +19,7 @@
         <dependency>
             <groupId>fag.visma</groupId>
             <artifactId>bysykkel-vue-fullstack-frontend</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
